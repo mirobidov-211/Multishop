@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block main %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+    }
+
+    .form-container {
+        background: white;
+        padding: 30px;
+        max-width: 1000px;
+        margin: auto;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    h2 {
+        text-align: center;
+    }
+</style>
+<div class="form-container">
+    <h2>Fikr Qoldiring</h2>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <label for="name">Ismingiz</label>
+        <input type="text" name="name" placeholder="Ismingiz" required>
+        <label for="email">Email</label>
+        <input type="email" name="email" placeholder="Email manzilingiz" required>
+        <label for="message">Fikringiz</label>
+        <textarea name="message" rows="5" placeholder="Fikringizni yozing..." required></textarea>
+
+        <button type="submit">Yuborish</button>
+    </form>
+</div>
+
+
+
+
+
+
+
+
+{% endblock main %}

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+
+<style>
+    .profile-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
+
+    .profile-card {
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        max-width: 600px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .profile-card img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 20px;
+        border: 4px solid #007bff;
+    }
+
+    .profile-card h2 {
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .profile-card p {
+        color: #555;
+    }
+
+    .profile-card a.btn-white {
+        background-color: #007bff;
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 15px;
+        transition: 0.3s ease;
+    }
+
+    .profile-card a.btn-white:hover {
+        background-color: #0056b3;
+        color: #fff !important;
+        text-decoration: none;
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-card">
+        <!-- ✅ Profil rasmi -->
+        {% if request.user.image %}
+        <img src="{{ request.user.image.url }}" alt="Profile Image">
+        {% else %}
+        <img src="{% static 'img/profile.png' %}" alt="Default Profile">
+        {% endif %}
+
+
+        <!-- Foydalanuvchi ismi -->
+        <h2>{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+
+        <!-- Qo‘shimcha ma’lumotlar -->
+        <p>Email: {{ request.user.email }}</p>
+        <p>Ism: {{ request.user.first_name }} {{ request.user.last_name }}</p>
+        <p>Ro'yxatdan o'tgan sana: {{ request.user.date_joined|date:"d-m-Y" }}</p>
+
+        <!-- Oq rangdagi tugma -->
+        <a href="{% url 'edit_profile' %}" class="btn-white">Profilni tahrirlash</a>
+    </div>
+</div>
+
+{% endblock %}

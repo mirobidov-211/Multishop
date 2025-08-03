@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<!-- Shop Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <!-- Shop Sidebar Start -->
+        <div class="col-lg-3 col-md-4">
+            <!-- Price Filter -->
+            <h5 class="section-title position-relative text-uppercase mb-3">
+                <span class="bg-secondary pr-3">Filter by price</span>
+            </h5>
+            <div class="bg-light p-4 mb-30">
+                <form id="priceForm" action="{% url 'shop' %}" method="get">
+                    <!-- All Price -->
+                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <input type="checkbox" class="custom-control-input" id="price-all"
+                            onclick="clearPricesAndSubmit()" {% if not selected_price %}checked{% endif %}>
+                        <label class="custom-control-label" for="price-all">All Price</label>
+                        <span class="badge border font-weight-normal">1000</span>
+                    </div>
+
+                    <!-- Dynamic Price Checkboxes -->
+                    {% for value, label in price_ranges %}
+                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <input type="checkbox" name="price" class="custom-control-input price-checkbox"
+                            id="price-{{ forloop.counter }}" value="{{ value }}" {% if value == selected_price %}checked{%  endif %} onchange="selectOnlyPrice(this)">
+                        <label class="custom-control-label" for="price-{{ forloop.counter }}">{{ label }}</label>
+                        <span class="badge border font-weight-normal">150</span>
+                    </div>
+                    {% endfor %}
+                </form>
+            </div>
+
+            <!-- Color Filter -->
+            <h5 class="section-title position-relative text-uppercase mb-3">
+                <span class="bg-secondary pr-3">Filter by color</span>
+            </h5>
+            <div class="bg-light p-4 mb-30">
+                <form id="colorForm" action="{% url 'shop' %}" method="get">
+                    <!-- All Color -->
+                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <input type="checkbox" class="custom-control-input" id="color-all"
+                            onclick="clearColorsAndSubmit()" {% if not selected_colors %}checked{% endif %}>
+                        <label class="custom-control-label" for="color-all">All Color</label>
+                        <span class="badge border font-weight-normal">1000</span>
+                    </div>
+
+                    <!-- Color Checkboxes -->
+                    {% for i in colors %}
+                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <input type="checkbox" name="color" class="custom-control-input color-checkbox"
+                            id="color-{{ forloop.counter }}" value="{{ i.id }}" {% if i.id|stringformat:"s" in selected_colors %}checked{% endif %} onchange="selectOnlyColor(this)">
+                        <label class="custom-control-label" for="color-{{ forloop.counter }}">{{ i.hex_code }}</label>
+                        <span class="badge border font-weight-normal">234</span>
+                    </div>
+                    {% endfor %}
+                </form>
+            </div>
+
+            <!-- Size Filter -->
+            <h5 class="section-title position-relative text-uppercase mb-3">
+                <span class="bg-secondary pr-3">Filter by size</span>
+            </h5>
+            <div class="bg-light p-4 mb-30">
+                <form id="sizeForm" action="{% url 'shop' %}" method="get">
+                    <!-- All Size -->
+                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <input type="checkbox" class="custom-control-input" id="size-all"
+                            onclick="clearSizesAndSubmit()" {% if not selected_sizes %}checked{% endif %}>
+                        <label class="custom-control-label" for="size-all">All Size</label>
+                        <span class="badge border font-weight-normal">1000</span>
+                    </div>
+
+                    <!-- Size Checkboxes -->
+                    {% for i in sizes1 %}
+                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <input type="checkbox" name="size" class="custom-control-input size-checkbox"
+                            id="size-{{ forloop.counter }}" value="{{ i.id }}" {% if i.id|stringformat:"s" in selected_sizes %}checked{% endif %} onchange="selectOnlySize(this)">
+                        <label class="custom-control-label" for="size-{{ forloop.counter }}">{{ i.size }}</label>
+                        <span class="badge border font-weight-normal">150</span>
+                    </div>
+                    {% endfor %}
+                </form>
+            </div>
+
+        </div>
+        <!-- Shop Sidebar End -->
+
+        <!-- Shop Product Start -->
+        <div class="col-lg-9 col-md-8" style="margin-top: 40px;">
+            <div class="row pb-3">
+                {% for i in products %}
+                <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+                    <div class="product-item bg-light mb-4">
+                        <div class="product-img position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="{{ i.images.first.image.url }}" alt="">
+                            <form action="{% url 'add_to_like' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ i.id }}">
+                                <div class="product-action">
+                                <button type="submit" class="btn btn-dark-dark btn-square">
+                                    <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
+                                </button>
+                                    
+                                </div>
+                            </form>
+                        </div>
+                        <div class="text-center py-4">
+                            <a class="h6 text-decoration-none text-truncate" href="{% url 'detail' i.pk %}">
+                                {{ i.name }}</a>
+                            <div class="d-flex align-items-center justify-content-center mt-2">
+                                <h5>${{ i.sale_price }}</h5>
+                                <h6 class="text-muted ml-2"><del>{{ i.sale }}%</del></h6>
+                                <h6 class="text-muted ml-2"><del>${{ i.price }}</del></h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Pagination -->
+                <div class="col-12">
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+        <!-- Shop Product End -->
+    </div>
+</div>
+<!-- Shop End -->
+
+<!-- Filtering Script -->
+<script>
+    function selectOnlyPrice(clickedCheckbox) {
+        document.querySelectorAll('.price-checkbox').forEach(cb => {
+            if (cb !== clickedCheckbox) cb.checked = false;
+        });
+        document.getElementById('price-all').checked = false;
+        document.getElementById('priceForm').submit();
+    }
+
+    function clearPricesAndSubmit() {
+        document.querySelectorAll('.price-checkbox').forEach(cb => cb.checked = false);
+        document.getElementById('priceForm').submit();
+    }
+
+    function selectOnlyColor(clickedCheckbox) {
+        document.querySelectorAll('.color-checkbox').forEach(cb => {
+            if (cb !== clickedCheckbox) cb.checked = false;
+        });
+        document.getElementById('color-all').checked = false;
+        document.getElementById('colorForm').submit();
+    }
+
+    function clearColorsAndSubmit() {
+        document.querySelectorAll('.color-checkbox').forEach(cb => cb.checked = false);
+        document.getElementById('colorForm').submit();
+    }
+
+    function selectOnlySize(clickedCheckbox) {
+        document.querySelectorAll('.size-checkbox').forEach(cb => {
+            if (cb !== clickedCheckbox) cb.checked = false;
+        });
+        document.getElementById('size-all').checked = false;
+        document.getElementById('sizeForm').submit();
+    }
+
+    function clearSizesAndSubmit() {
+        document.querySelectorAll('.size-checkbox').forEach(cb => cb.checked = false);
+        document.getElementById('sizeForm').submit();
+    }
+</script>
+{% endblock %}

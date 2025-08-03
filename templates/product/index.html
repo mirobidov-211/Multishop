@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+
+<!-- Carousel Start -->
+<div class="container-fluid mb-3">
+    <div class="row px-xl-5">
+        <div class="col-lg-8" style="width: 1400px; height: 600px;">
+            <div id="header-carousel" class="carousel slide carousel-fade mb-30 mb-lg-0" data-ride="carousel"
+                style="width: 1400px">
+                <ol class="carousel-indicators">
+                    {% for i in product2 %}
+                    {% if i.is_active %}
+                    <li data-target="#header-carousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active" {% endif %}></li>
+                    {% endif %}
+                    {% endfor %}
+                </ol>
+
+                <div class="carousel-inner">
+                    {% for i in product2 %}
+                    {% if i.is_active %}
+                    <div class="carousel-item position-relative {% if forloop.first %}active{% endif %}"
+                        style="height: 600px;">
+                        <img class="position-absolute w-100 h-100" src="{{ i.img.url }}" style="object-fit: cover;">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                            <div class="p-3" style="max-width: 700px;">
+                                <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">
+                                    {{i.name }}
+                                </h1>
+                                <p class="mx-md-5 px-5 animate__animated animate__bounceIn">{{ i.about }}</p>
+                                <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
+                                    href="{% url 'shop' %}">Shop Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Carousel End -->
+
+
+
+
+<!-- Products Start -->
+<div class="container-fluid pt-5 pb-3">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">
+            Tanlangan mahsulotlar
+        </span></h2>
+    <div class="row px-xl-5">
+        {% for i in products|slice:":20" %}
+        {% if i.is_active %}
+        <a href="{% url 'detail' i.pk %}">
+            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+                <div class="product-item bg-light mb-4">
+                    <div class="product-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" src="{{ i.images.first.image.url }}" alt="">
+                    </div>
+                    <div class="text-center py-4">
+                        <a class="h6 text-decoration-none text-truncate" href="{% url 'detail' i.pk %}">{{ i.name }}</a>
+                        <div class="d-flex align-items-center justify-content-center mt-2">
+                            <h5>${{ i.sale_price }}</h5>
+                            <h6 class="text-muted ml-2"><del>{{ i.sale }}%</del></h6>
+                            <h6 class="text-muted ml-2"><del>${{ i.price }}</del></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<!-- Products End -->
+
+
+
+<!-- Products Start -->
+<div class="container-fluid pt-5 pb-3">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">
+            Oxirgi mahsulotlar
+        </span></h2>
+    <div class="row px-xl-5">
+        {% for i in products2|slice:":20" %}
+        {% if i.is_active %}
+        <a href="{% url 'detail' i.pk %}" class="text-decoration-none">
+            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+                <div class="product-item bg-light mb-4">
+                    <div class="product-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" src="{{ i.images.first.image.url }}" alt="">
+                    </div>
+                    <div class="text-center py-4">
+                        <a class="h6 text-decoration-none text-truncate" href="{% url 'detail' i.pk %}">{{ i.name }}</a>
+                        <div class="d-flex align-items-center justify-content-center mt-2">
+                            <h5>${{ i.sale_price }}</h5>
+                            <h6 class="text-muted ml-2"><del>{{ i.sale }}%</del></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<!-- Products End -->
+
+
+<!-- Vendor Start -->
+<div class="container-fluid py-5">
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="owl-carousel vendor-carousel">
+                <div class="bg-light p-4">
+                    <img src="{% static 'img/vendor-1.jpg' %}" alt="">
+                </div>
+                <div class="bg-light p-4">
+                    <img src="{% static 'img/vendor-2.jpg' %}" alt="">
+                </div>
+                <div class="bg-light p-4">
+                    <img src="{% static 'img/vendor-3.jpg' %}" alt="">
+                </div>
+                <div class="bg-light p-4">
+                    <img src="{% static 'img/vendor-4.jpg' %}" alt="">
+                </div>
+                <div class="bg-light p-4">
+                    <img src="{% static 'img/vendor-5.jpg' %}" alt="">
+                </div>
+                <div class="bg-light p-4">
+                    <img src="{% static 'img/vendor-6.jpg' %}" alt="">
+                </div>
+                <div class="bg-light p-4">
+                    <img src="{% static 'img/vendor-7.jpg' %}" alt="">
+                </div>
+                <div class="bg-light p-4">
+                    <img src="{% static 'img/vendor-8.jpg' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Vendor End -->
+
+
+{% endblock main %}
