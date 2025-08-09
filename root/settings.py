@@ -12,27 +12,27 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import environ
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
-environ.Env.read_env(BASE_DIR / '.env')  # ✅ to‘g‘ri yo‘l
+# .env fayli mavjud bo'lsa o'qish
+environ.Env.read_env(BASE_DIR / '.env')
 
 # print("DEBUG:", env("DEBUG", default="Not found"))  # TEST
 # print("SECRET_KEY:", env("SECRET_KEY", default="Not found"))  # TEST
 
-SECRET_KEY = env("SECRET_KEY")  # ❗ xato shu yerda chiqyapti, agar topolmasa
+SECRET_KEY = env("SECRET_KEY", default="django-insecure-your-secret-key-here")
 DEBUG = env.bool("DEBUG", default=True)
 
-
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://bf361a13ec8d.ngrok-free.app",
+    "https://b00cc742790e.ngrok-free.app",
 ]
 
 # Application definition
@@ -93,13 +93,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'root.wsgi.application'
 
-import os, dj_database_url
+import dj_database_url
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.parse(env('DATABASE_URL'))
+    'default': dj_database_url.parse(env('DATABASE_URL', default='sqlite:///db.sqlite3'))
 }
 
 
